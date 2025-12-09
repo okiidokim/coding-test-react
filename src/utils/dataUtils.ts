@@ -123,11 +123,10 @@ export const mergeAndDeduplicateUsers = (
   users1: User[],
   users2: User[]
 ): User[] => {
-  const usersCombined: User[] = users2.concat(users1);
-  const filterdUsers: User[] = usersCombined.filter(
-    (user, pos) => usersCombined.indexOf(user) === pos
-  );
-  return filterdUsers;
+  const map = new Map();
+  users1.forEach((user) => map.set(user.id, user));
+  users2.forEach((user) => map.set(user.id, user));
+  return [...map.values()];
 };
 
 // 문제 9: 특정 태그를 가진 사용자 찾기
