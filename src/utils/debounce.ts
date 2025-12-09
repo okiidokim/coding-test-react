@@ -20,11 +20,11 @@ export function debounce<T extends (...args: any[]) => any>(
 ): (...args: Parameters<T>) => void {
   // 여기에 debounce 로직을 구현하세요.
   // Hint: 클로저를 사용하여 타이머 ID를 관리해야 합니다.
-  let id: any = null;
+  let id: ReturnType<typeof setTimeout> | null = null;
   return function (...args: Parameters<T>) {
     // @ts-ignore
     const context = this;
-    if (id) {
+    if (id !== null) {
       clearTimeout(id);
     }
     id = setTimeout(() => {
