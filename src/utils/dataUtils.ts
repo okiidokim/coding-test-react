@@ -70,16 +70,12 @@ export const sortArrayByKey = <T>(
   key: keyof T,
   order: 'asc' | 'desc'
 ): T[] => {
-  const newArr: T[] = array.sort((a: T, b: T) => {
-    if (order === 'asc') {
-      if (a[key] > b[key]) return 1;
-      else return -1;
-    } else {
-      if (a[key] < b[key]) return 1;
-      else return -1;
-    }
+  const copied = [...array];
+  return copied.sort((a, b) => {
+    if (a[key] < b[key]) return order === 'asc' ? -1 : 1;
+    if (a[key] > b[key]) return order === 'asc' ? 1 : -1;
+    return 0;
   });
-  return newArr;
 };
 
 // 문제 5: 페이지네이션 구현
@@ -88,10 +84,16 @@ export const paginate = <T>(
   page: number,
   pageSize: number
 ): PaginatedResult<T> => {
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+  const items: T[] = array.slice(start, end);
+  const totalPages = Math.ceil(array.length / pageSize);
+  const totalItems = array.length;
+
   return {
-    items: array.slice(page, page + pageSize),
-    totalItems: array.length,
-    totalPages: array.length / pageSize,
+    items,
+    totalItems,
+    totalPages,
     currentPage: page,
   };
 };
@@ -123,11 +125,10 @@ export const mergeAndDeduplicateUsers = (
   users1: User[],
   users2: User[]
 ): User[] => {
-  const usersCombined: User[] = users2.concat(users1);
-  const filterdUsers: User[] = usersCombined.filter(
-    (user, pos) => usersCombined.indexOf(user) === pos
-  );
-  return filterdUsers;
+  const map = new Map();
+  users1.forEach((user) => map.set(user.id, user));
+  users2.forEach((user) => map.set(user.id, user));
+  return [...map.values()];
 };
 
 // 문제 9: 특정 태그를 가진 사용자 찾기

@@ -33,12 +33,10 @@ const BuggyCart: React.FC = () => {
   // 버그가 있는 Handler
   const handleIncreaseQuantity = (itemId: number) => {
     setItems((prev) => {
-      const itemFound = prev.filter((item) => itemId === item.id);
-      let restItems = prev.filter((item) => itemId !== item.id);
-      itemFound[0].quantity += 1;
-      restItems = restItems.concat(itemFound);
-      restItems.sort((a: CartItem, b: CartItem) => a.id - b.id);
-      return restItems;
+      const newItems = prev.map((item) =>
+        item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
+      );
+      return newItems;
     });
   };
 
