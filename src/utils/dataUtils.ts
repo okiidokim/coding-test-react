@@ -88,10 +88,16 @@ export const paginate = <T>(
   page: number,
   pageSize: number
 ): PaginatedResult<T> => {
+  const start = (page - 1) * pageSize - 1;
+  const end = start + pageSize;
+  const items: T[] = array.slice(start, end);
+  const totalPages = Math.ceil(array.length / pageSize);
+  const totalItems = array.length;
+
   return {
-    items: array.slice(page, page + pageSize),
-    totalItems: array.length,
-    totalPages: array.length / pageSize,
+    items,
+    totalItems,
+    totalPages,
     currentPage: page,
   };
 };
